@@ -33,6 +33,11 @@
   add Betsy Choo p/222222 e/benchoo@nus.edu.sg
   list
 
+  # should allow the same add inputs several time
+  add Adam Brown p/111111 e/adam@gmail.com
+  add Adam Brown p/111111 e/adam@gmail.com
+  list
+
   # order of phone and email should not matter
   add Charlie Dickson e/charlie.d@nus.edu.sg p/333333
   list
@@ -95,7 +100,6 @@
 # test clear command
 ##########################################################
 
-  # clears all
   clear
   list
 
