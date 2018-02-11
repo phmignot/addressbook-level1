@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
@@ -136,7 +137,7 @@ public class AddressBook {
     private static final String DIVIDER = "===================================================";
 
 
-    /* We use a String array to store details of a single person.
+    /* We use a HashMap collection to store details of a single person.
      * The constants given below are the indexes for the different data elements of a person
      * used by the internal String[] storage format.
      * For example, a person's name is stored as the 0th element in the array.
@@ -144,6 +145,10 @@ public class AddressBook {
     private static final int PERSON_DATA_INDEX_NAME = 0;
     private static final int PERSON_DATA_INDEX_PHONE = 1;
     private static final int PERSON_DATA_INDEX_EMAIL = 2;
+
+    private static final String PERSON_PROPERTY_NAME = "name";
+    private static final String PERSON_PROPERTY_EMAIL = "email";
+    private static final String PERSON_PROPERTY_PHONE = "phone";
 
     /**
      * The number of data elements for a single person.
@@ -182,7 +187,7 @@ public class AddressBook {
      * List of all persons in the address book.
      */
     private static final ArrayList<String[]> ALL_PERSONS = new ArrayList<>();
-
+    
     /**
      * Stores the most recent list of persons shown to the user as a result of a user command.
      * This is a subset of the full list. Deleting persons in the pull list does not delete
@@ -842,6 +847,9 @@ public class AddressBook {
         return person[PERSON_DATA_INDEX_NAME];
     }
 
+    private static String getNameFromPerson_HashMap(HashMap<String,String> person) {
+        return person.get(PERSON_PROPERTY_NAME);
+    }
     /**
      * Returns given person's phone number
      *
@@ -851,6 +859,9 @@ public class AddressBook {
         return person[PERSON_DATA_INDEX_PHONE];
     }
 
+    private static String getPhoneFromPerson_HashMap(HashMap<String,String> person) {
+        return person.get(PERSON_PROPERTY_PHONE);
+    }
     /**
      * Returns given person's email
      *
@@ -860,6 +871,9 @@ public class AddressBook {
         return person[PERSON_DATA_INDEX_EMAIL];
     }
 
+    private static String getEmailFromPerson_HashMap(HashMap<String,String> person) {
+        return person.get(PERSON_PROPERTY_EMAIL);
+    }
     /**
      * Creates a person from the given data.
      *
@@ -875,6 +889,15 @@ public class AddressBook {
         person[PERSON_DATA_INDEX_EMAIL] = email;
         return person;
     }
+
+    private static HashMap<String,String> makePersonFromData_HashMap(String name, String phone, String email) {
+        final HashMap<String,String> person = new HashMap<>();
+        person.put(PERSON_PROPERTY_NAME, name);
+        person.put(PERSON_PROPERTY_PHONE, phone);
+        person.put(PERSON_PROPERTY_EMAIL, email);
+        return person;
+    }
+    
 
     /**
      * Encodes a person into a decodable and readable string representation.
@@ -1034,6 +1057,12 @@ public class AddressBook {
                 && isPersonEmailValid(person[PERSON_DATA_INDEX_EMAIL]);
     }
 
+    private static boolean isPersonDataValid_HashMap(HashMap<String, String> person) {
+        return isPersonNameValid(person.get(PERSON_PROPERTY_NAME))
+                && isPersonPhoneValid(person.get(PERSON_PROPERTY_PHONE))
+                && isPersonEmailValid(person.get(PERSON_PROPERTY_EMAIL));
+    }
+
     /*
      * NOTE : =============================================================
      * Note the use of 'regular expressions' in the method below.
@@ -1051,6 +1080,7 @@ public class AddressBook {
         return name.matches("(\\w|\\s)+");  // name is nonempty mixture of alphabets and whitespace
         //TODO: implement a more permissive validation
     }
+    
 
     /**
      * Returns true if the given string as a legal person phone number
