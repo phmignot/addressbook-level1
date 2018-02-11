@@ -910,6 +910,7 @@ public class AddressBook {
                 getNameFromPerson(person), getPhoneFromPerson(person), getEmailFromPerson(person));
     }
 
+
     /**
      * Encodes list of persons into list of decodable and readable string representations.
      *
@@ -952,6 +953,20 @@ public class AddressBook {
         return isPersonDataValid(decodedPerson) ? Optional.of(decodedPerson) : Optional.empty();
     }
 
+    private static Optional<HashMap<String,String>> decodePersonFromString_HashMap(String encoded) {
+        // check that we can extract the parts of a person from the encoded string
+        if (!isPersonDataExtractableFrom(encoded)) {
+            return Optional.empty();
+        }
+        final HashMap<String,String> decodedPerson = makePersonFromData_HashMap(
+                extractNameFromPersonString(encoded),
+                extractPhoneFromPersonString(encoded),
+                extractEmailFromPersonString(encoded)
+        );
+        // check that the constructed person is valid
+        return isPersonDataValid_HashMap(decodedPerson) ? Optional.of(decodedPerson) : Optional.empty();
+    }
+
     /**
      * Decodes persons from a list of string representations.
      *
@@ -963,6 +978,18 @@ public class AddressBook {
         final ArrayList<String[]> decodedPersons = new ArrayList<>();
         for (String encodedPerson : encodedPersons) {
             final Optional<String[]> decodedPerson = decodePersonFromString(encodedPerson);
+            if (!decodedPerson.isPresent()) {
+                return Optional.empty();
+            }
+            decodedPersons.add(decodedPerson.get());
+        }
+        return Optional.of(decodedPersons);
+    }
+    
+    private static Optional<ArrayList<HashMap<String,String>>> decodePersonsFromStrings_HashMap(ArrayList<String> encodedPersons) {
+        final ArrayList<HashMap<String,String>> decodedPersons = new ArrayList<>();
+        for (String encodedPerson : encodedPersons) {
+            final Optional<HashMap<String,String>> decodedPerson = decodePersonFromString_HashMap(encodedPerson);
             if (!decodedPerson.isPresent()) {
                 return Optional.empty();
             }
